@@ -16,27 +16,27 @@ namespace lab1.Processes
         }
 
 
-        public void Diffuse(Map map)
+        public void Diffuse(MapContainer map)
         {
             BeforeExecution(map);
             Execute(map);
             AfterExecution(map);
         }
 
-        private void BeforeExecution(Map map)
+        private void BeforeExecution(MapContainer map)
         {
             _mapService.InitializeNeighbours(map);
             _mapService.InitializeBalances(map);
         }
 
-        private void AfterExecution(Map map)
+        private void AfterExecution(MapContainer map)
         {
             var countriesToOutput = new List<Country>(map.Countries.Values.ToList().OrderBy(x => x.DaysToCompletion));
             foreach (var country in countriesToOutput)
                 Console.WriteLine(country.Name + " " + country.DaysToCompletion);
         }
 
-        private void Execute(Map map)
+        private void Execute(MapContainer map)
         {
             int days = 0;
 

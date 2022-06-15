@@ -14,98 +14,98 @@ namespace lab1.Services
         {
             _cityService = cityService;
         }
-        public void InitializeNeighbours(Map map)
+        public void InitializeNeighbours(MapContainer container)
         {
-            foreach (var city in map.Cities)
+            foreach (var city in container.Cities)
             {
                 int x = city.Value.X;
                 int y = city.Value.Y;
 
                 var neighborsList = new List<City>();
 
-                if (MapValidator.CheckIfUpperNeighborCanExist(map._map, x, y))
-                    neighborsList.Add(map.Cities[GetUniqueCityCode(x, y + 1)]);
-                if (MapValidator.CheckIfLowerNeighborCanExist(map._map, x, y))
-                    neighborsList.Add(map.Cities[GetUniqueCityCode(x, y - 1)]);
-                if (MapValidator.CheckIfLeftNeighborCanExist(map._map, x, y))
-                    neighborsList.Add(map.Cities[GetUniqueCityCode(x - 1, y)]);
-                if (MapValidator.CheckIfRightNeighborCanExist(map._map, x, y))
-                    neighborsList.Add(map.Cities[GetUniqueCityCode(x + 1, y)]);
+                if (MapValidator.CheckIfUpperNeighborCanExist(container.Map, x, y))
+                    neighborsList.Add(container.Cities[GetUniqueCityCode(x, y + 1)]);
+                if (MapValidator.CheckIfLowerNeighborCanExist(container.Map, x, y))
+                    neighborsList.Add(container.Cities[GetUniqueCityCode(x, y - 1)]);
+                if (MapValidator.CheckIfLeftNeighborCanExist(container.Map, x, y))
+                    neighborsList.Add(container.Cities[GetUniqueCityCode(x - 1, y)]);
+                if (MapValidator.CheckIfRightNeighborCanExist(container.Map, x, y))
+                    neighborsList.Add(container.Cities[GetUniqueCityCode(x + 1, y)]);
 
-                map.CityToNeighbours.Add(city.Value, neighborsList);
+                container.CityToNeighbours.Add(city.Value, neighborsList);
             }
         }
 
-        public void InitializeBalances(Map map)
+        public void InitializeBalances(MapContainer container)
         {
-            foreach (var city in map.Cities)
-                _cityService.InitializeBalances(city.Value, map.Countries.Values.ToList());
+            foreach (var city in container.Cities)
+                _cityService.InitializeBalances(city.Value, container.Countries.Values.ToList());
         }
 
-        public void FillCoinsToPayPerDay(Map map)
+        public void FillCoinsToPayPerDay(MapContainer container)
         {
-            foreach (var city in map.Cities)
+            foreach (var city in container.Cities)
                 _cityService.FillCoinsToPayPerDay(city.Value);
         }
 
-        public void FillCurrentBalances(Map map)
+        public void FillCurrentBalances(MapContainer container)
         {
-            foreach (var city in map.Cities)
+            foreach (var city in container.Cities)
                 _cityService.FillCurrentBalance(city.Value);
         }
 
-        public void FillDaysToCompletion(Map map, int days)
+        public void FillDaysToCompletion(MapContainer container, int days)
         {
-            if (map.Countries.Count == 1)
-                map.Countries.First().Value.DaysToCompletion = 0;
-            foreach (var country in map.Countries)
+            if (container.Countries.Count == 1)
+                container.Countries.First().Value.DaysToCompletion = 0;
+            foreach (var country in container.Countries)
                 if (country.Value.DaysToCompletion < 0)
                     country.Value.DaysToCompletion = days;
-            foreach (var city in map.Cities)
-                if (!_cityService.HasEachTypeOfCoin(city.Value, map.Countries.Values.ToList()))
+            foreach (var city in container.Cities)
+                if (!_cityService.HasEachTypeOfCoin(city.Value, container.Countries.Values.ToList()))
                     city.Value.Country.DaysToCompletion = -1;
         }
 
-        public void ResetIncomingBalances(Map map)
+        public void ResetIncomingBalances(MapContainer container)
         {
-            foreach (var city in map.Cities)
+            foreach (var city in container.Cities)
                 _cityService.ResetIncomingBalance(city.Value);
         }
 
-        public void EnrollCoins(Map map)
+        public void EnrollCoins(MapContainer container)
         {
-            var cities = map.CityToNeighbours.Keys.ToList();
-            var countries = map.Countries.Values.ToList();
+            var cities = container.CityToNeighbours.Keys.ToList();
+            var countries = container.Countries.Values.ToList();
             foreach (var city in cities)
-                foreach (var neighborCity in map.CityToNeighbours[city])
+                foreach (var neighborCity in container.CityToNeighbours[city])
                     foreach (var country in countries)
                         _cityService.EnrollCoins(city, neighborCity, country);
         }
 
-        public bool HasEachTypeOfCoin(Map map, int days)
+        public bool HasEachTypeOfCoin(MapContainer container, int days)
         {
-            foreach (var city in map.Cities)
-                if (!_cityService.HasEachTypeOfCoin(city.Value, map.Countries.Values.ToList()))
+            foreach (var city in container.Cities)
+                if (!_cityService.HasEachTypeOfCoin(city.Value, container.Countries.Values.ToList()))
                     return false;
             return true;
         }
 
-        public void AddCountryWithCitiesOnMap(Map map, Country country)
+        public void AddCountryWithCitiesOnMap(MapContainer container, Country country)
         {
-            map.Countries.Add(map.Countries.Count + 1, country);
-            AddCitiesOfCountryOnMap(map, country);
+            container.Countries.Add(container.Countries.Count + 1, country);
+            AddCitiesOfCountryOnMap(container, country);
         }
 
-        private void AddCitiesOfCountryOnMap(Map map, Country country)
+        private void AddCitiesOfCountryOnMap(MapContainer container, Country country)
         {
             for (int y = country.Yl; y <= country.Yh; y++)
             {
                 for (int x = country.Xl; x <= country.Xh; x++)
                 {
                     var city = new City(x, y, country);
-                    if (!map.Cities.ContainsKey(GetUniqueCityCode(city.X, city.Y)))
-                        map.Cities.Add(GetUniqueCityCode(city.X, city.Y), city);
-                    map._map[x, y] = map.Countries.Count;
+                    if (!container.Cities.ContainsKey(GetUniqueCityCode(city.X, city.Y)))
+                        container.Cities.Add(GetUniqueCityCode(city.X, city.Y), city);
+                    container.Map[x, y] = container.Countries.Count;
                 }
             }
         }

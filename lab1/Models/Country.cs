@@ -12,11 +12,7 @@ namespace lab1.Models
         public int DaysToCompletion { get; set; }
         public Country(string name, int xl, int yl, int xh, int yh)
         {
-            CountryValidator.ValidateCountryName(name);
-
-            CountryValidator.ValidateLowerAndHigherCoordinate(xl, xh);
-
-            CountryValidator.ValidateLowerAndHigherCoordinate(yl, yh);
+            CountryValidator.ValidateBeforeInitialize(name, xl, yl, xh, yh);
 
             Name = name;
             Xl = xl;

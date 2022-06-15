@@ -4,6 +4,6 @@ namespace lab1.Interfaces
 {
     public interface IDiffusionProcess
     {
-        public void Diffuse(Map map);
+        public void Diffuse(MapContainer map);
     }
 }

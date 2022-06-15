@@ -22,7 +22,7 @@ namespace lab1.Helpers
             return result;
         }
 
-        public static Map ReadMap(List<string> lines, IMapService mapService)
+        public static MapContainer ReadMap(List<string> lines, IMapService mapService)
         {
             var countriesCount = int.Parse(lines.ElementAt(0));
             lines.RemoveAt(0);
@@ -33,7 +33,7 @@ namespace lab1.Helpers
                 return null;
             }
 
-            var map = new Map();
+            var map = new MapContainer();
 
             for (int i = 0; i < countriesCount; i++)
             {

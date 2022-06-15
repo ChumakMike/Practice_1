@@ -26,10 +26,10 @@ namespace lab1.Validators
             return y != Constants.MinCoordinate - 1 && map[x, y - 1] != 0;
         }
 
-        public static bool CheckIfCountriesAreAccessible(Map map)
+        public static bool CheckIfCountriesAreAccessible(MapContainer container)
         {
-            var currentCountryId = map.Countries.Keys.ToList().FirstOrDefault();
-            var countriesOnMap = map.Countries.Count;
+            var currentCountryId = container.Countries.Keys.ToList().FirstOrDefault();
+            var countriesOnMap = container.Countries.Count;
 
             List<int> accessibleCountriesIds = new List<int>();
             List<int> currentCountryNeighborsIds = new List<int>();
@@ -37,34 +37,34 @@ namespace lab1.Validators
             while (accessibleCountriesIds.Count < countriesOnMap)
             {
                 accessibleCountriesIds.Add(currentCountryId);
-                AddNeighborsForCountry(map, currentCountryId, accessibleCountriesIds, currentCountryNeighborsIds);
+                AddNeighborsForCountry(container, currentCountryId, accessibleCountriesIds, currentCountryNeighborsIds);
                 if (!currentCountryNeighborsIds.Any()) break;
                 currentCountryId = currentCountryNeighborsIds.ElementAt(0);
             }
             return accessibleCountriesIds.Count == countriesOnMap;
         }
 
-        private static void AddNeighborsForCountry(Map map, int id,
+        private static void AddNeighborsForCountry(MapContainer container, int id,
             List<int> accessibleCountriesIds, List<int> currentCountryNeighborsIds)
         {
-            var currentCountry = map.Countries[id];
+            var currentCountry = container.Countries[id];
 
             for (int i = currentCountry.Xl; i <= currentCountry.Xh - currentCountry.Xl; i++)
             {
                 if (currentCountry.Yl != Constants.MinCoordinate)
-                    AddCountryToNeighborsList(map._map[currentCountry.Xl + i, currentCountry.Yl - 1], accessibleCountriesIds, currentCountryNeighborsIds);
+                    AddCountryToNeighborsList(container.Map[currentCountry.Xl + i, currentCountry.Yl - 1], accessibleCountriesIds, currentCountryNeighborsIds);
 
                 if (currentCountry.Yh != Constants.MaxCoordinate)
-                    AddCountryToNeighborsList(map._map[currentCountry.Xl + i, currentCountry.Yh + 1], accessibleCountriesIds, currentCountryNeighborsIds);
+                    AddCountryToNeighborsList(container.Map[currentCountry.Xl + i, currentCountry.Yh + 1], accessibleCountriesIds, currentCountryNeighborsIds);
             }
 
             for (int i = 0; i <= currentCountry.Yh - currentCountry.Yl; i++)
             {
                 if (currentCountry.Xl != Constants.MinCoordinate)
-                    AddCountryToNeighborsList(map._map[currentCountry.Xl - 1, currentCountry.Yl + i], accessibleCountriesIds, currentCountryNeighborsIds);
+                    AddCountryToNeighborsList(container.Map[currentCountry.Xl - 1, currentCountry.Yl + i], accessibleCountriesIds, currentCountryNeighborsIds);
 
                 if (currentCountry.Xh != Constants.MaxCoordinate)
-                    AddCountryToNeighborsList(map._map[currentCountry.Xh + 1, i + currentCountry.Yl + i], accessibleCountriesIds, currentCountryNeighborsIds);
+                    AddCountryToNeighborsList(container.Map[currentCountry.Xh + 1, i + currentCountry.Yl + i], accessibleCountriesIds, currentCountryNeighborsIds);
             }
         }
 
