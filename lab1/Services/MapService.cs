@@ -83,12 +83,8 @@ namespace lab1.Services
         }
 
         public bool HasEachTypeOfCoin(MapContainer container, int days)
-        {
-            foreach (var city in container.Cities)
-                if (!_cityService.HasEachTypeOfCoin(city.Value, container.Countries.Values.ToList()))
-                    return false;
-            return true;
-        }
+            => container.Cities.All(x =>
+                _cityService.HasEachTypeOfCoin(x.Value, container.Countries.Values.ToList()));
 
         public void AddCountryWithCitiesOnMap(MapContainer container, Country country)
         {

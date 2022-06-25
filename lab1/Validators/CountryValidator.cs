@@ -21,7 +21,7 @@ namespace lab1.Validators
         private static void ValidateCountryName(string name)
         {
             if (name?.Length > Constants.MaxNameLength)
-                throw new ArgumentException("Country name must be less than 25 characters!");
+                throw new ArgumentException($"Country name must be less than {Constants.MaxNameLength} characters!");
         }
     }
 }

@@ -19,14 +19,7 @@ namespace lab1.Services
         }
 
         public bool HasEachTypeOfCoin(City city, List<Country> countries)
-        {
-            foreach (var country in countries)
-            {
-                if (city.CurrentBalance[country] == 0)
-                    return false;
-            }
-            return true;
-        }
+            => countries.All(x => city.CurrentBalance[x] != 0);
 
         public void EnrollCoins(City city, City neighbour, Country country)
         {
@@ -45,7 +38,7 @@ namespace lab1.Services
         public void FillCoinsToPayPerDay(City city)
         {
             foreach (var item in city.CurrentBalance)
-                city.CoinsToPayPerDay[item.Key] = city.CurrentBalance[item.Key] / 1000;
+                city.CoinsToPayPerDay[item.Key] = city.CurrentBalance[item.Key] / Constants.CoinsPortion;
         }
 
         public void ResetIncomingBalance(City city)
